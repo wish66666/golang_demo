@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - feature/*
+
+jobs:
+  ci:
+    name: 'CI'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        go-version: [1.17]
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@master
+
+      - name: Set up Go ✨
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Run Lint staticcheck 🤖
+        uses: dominikh/staticcheck-action@v1.2.0
+        with:
+          version: "2022.1.1"
+          install-go: false
+          cache-key: ${{ matrix.go-version }}

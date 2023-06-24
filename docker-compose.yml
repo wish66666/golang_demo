@@ -1,0 +1,26 @@
+version: '3'
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    ports:
+      - '8080:8080'
+    tty: true
+
+  mysql:
+    image: mysql:8.0
+    platform: linux/amd64
+    volumes:
+      - ./containers/mysql:/etc/mysql/conf.d/
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - '4306:3306'
+volumes:
+  mysql:
