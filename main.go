@@ -8,18 +8,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/kelseyhightower/envconfig"
+	"golang_demo/config"
+	"golang_demo/models"
 )
 
-type Config struct {
-	MySQL MySQL
-}
-type MySQL struct {
-    Host string
-    Port string
-    User string
-	Password string
-	Database string
-}
 
 func hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, World!")
@@ -33,6 +25,11 @@ func main() {
 
 	dsn := config.MySQL.User + ":@tcp(" + config.MySQL.Host + ":" + config.MySQL.Port + ")/" + config.MySQL.Database + "?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	var articles []Article
+    if err := db.Find(&articles).Error; err != nil {
+        panic(err)
+    }
 
 	e := echo.New()
 
