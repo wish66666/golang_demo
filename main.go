@@ -10,6 +10,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	"golang_demo/config"
 	"golang_demo/models"
+
 )
 
 
@@ -18,18 +19,21 @@ func hello(c echo.Context) error {
 }
 
 func main() {
-	var config Config
+	var config config.Config
 	envconfig.Process("APP", &config)
 
 	fmt.Println(config.MySQL)
 
 	dsn := config.MySQL.User + ":@tcp(" + config.MySQL.Host + ":" + config.MySQL.Port + ")/" + config.MySQL.Database + "?charset=utf8mb4&parseTime=True&loc=Local"
+	fmt.Println(dsn)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
-	var articles []Article
-    if err := db.Find(&articles).Error; err != nil {
-        panic(err)
-    }
+	fmt.Println(err)
+
+	var articles []models.Article
+	if err := db.Find(&articles).Error; err != nil {
+		panic(err)
+	}
 
 	e := echo.New()
 
