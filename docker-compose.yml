@@ -11,7 +11,8 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     links:
       - mysql
     ports:
@@ -24,6 +25,8 @@ services:
     volumes:
       - ./containers/mysql:/etc/mysql/conf.d/
       - mysql:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h mysql -P 3306 -u root
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     ports:

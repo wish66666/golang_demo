@@ -34,6 +34,7 @@ func main() {
 	if err := db.Find(&articles).Error; err != nil {
 		panic(err)
 	}
+	fmt.Println(articles)
 
 	e := echo.New()
 
