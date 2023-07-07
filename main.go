@@ -2,17 +2,18 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"github.com/labstack/echo/v4"
-	"github.com/kelseyhightower/envconfig"
 	"golang_demo/config"
-	"golang_demo/models"
+	"golang_demo/controllers/article"
 
+	"github.com/kelseyhightower/envconfig"
+	"github.com/labstack/echo/v4"
 )
-
 
 func hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, World!")
@@ -27,18 +28,16 @@ func main() {
 	dsn := config.MySQL.User + ":@tcp(" + config.MySQL.Host + ":" + config.MySQL.Port + ")/" + config.MySQL.Database + "?charset=utf8mb4&parseTime=True&loc=Local"
 	fmt.Println(dsn)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-
-	fmt.Println(err)
-
-	var articles []models.Article
-	if err := db.Find(&articles).Error; err != nil {
-		panic(err)
+	if err != nil {
+		log.Fatal(err)
 	}
-	fmt.Println(articles)
 
 	e := echo.New()
 
+	articleController := article.NewArticleController(db)
+
 	e.GET("/", hello)
+	e.GET("/articles", articleController.GetAll)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
