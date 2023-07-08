@@ -1,26 +1,25 @@
 package article
 
 import (
-	"golang_demo/models"
+	"golang_demo/controllers/interfaces/repositories/article"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 type ArticleController struct {
-	db *gorm.DB
+	repository article.ArticleRepository
 }
 
-func NewArticleController(db *gorm.DB) *ArticleController {
+func NewArticleController(repository article.ArticleRepository) *ArticleController {
 	return &ArticleController{
-		db: db,
+		repository: repository,
 	}
 }
 
 func (c *ArticleController) GetAll(ctx echo.Context) error {
-	var articles []models.Article
-	if err := c.db.Find(&articles).Error; err != nil {
+	articles, err := c.repository.Find(ctx.Request().Context())
+	if err != nil {
 		return err
 	}
 	return ctx.JSON(http.StatusOK, articles)
