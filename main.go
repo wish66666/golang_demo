@@ -10,6 +10,7 @@ import (
 
 	"golang_demo/config"
 	"golang_demo/controllers/article"
+	ar "golang_demo/repositories/article"
 
 	"github.com/kelseyhightower/envconfig"
 	"github.com/labstack/echo/v4"
@@ -34,7 +35,7 @@ func main() {
 
 	e := echo.New()
 
-	articleController := article.NewArticleController(db)
+	articleController := article.NewArticleController(ar.NewArticleRepository(db))
 
 	e.GET("/", hello)
 	e.GET("/articles", articleController.GetAll)
