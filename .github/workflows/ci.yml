@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        go-version: [1.20]
+        go-version: ['1.20']
 
     steps:
       - name: Checkout 🛎
@@ -31,12 +31,13 @@ jobs:
           cache: true
           cache-dependency-path: go.sum
 
-      - name: Run Lint staticcheck 🤖
-        uses: dominikh/staticcheck-action@v1.2.0
+      - uses: golangci/golangci-lint-action@v3
         with:
-          version: "2022.1.1"
-          install-go: false
-          cache-key: ${{ matrix.go-version }}
+          version: v1.51.2
+          working-directory: .
+          args: "--config ./.golangci.yml --verbose ./..."
+          github-token: ${{ secrets.github_token }}
+          skip-cache: true
 
       - name: Build
         run: go build -v ./...
