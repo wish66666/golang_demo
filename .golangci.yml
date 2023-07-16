@@ -1,0 +1,82 @@
+# https://golangci-lint.run/usage/configuration/#config-file
+run:
+  go: "1.20"
+  timeout: 5m
+
+linters-settings:
+  staticcheck:
+    go: "1.20"
+    checks: ["all"]
+
+  stylecheck:
+    go: "1.20"
+    checks:
+      ["all", "-ST1000", "-ST1016", "-ST1020", "-ST1021", "-ST1022", "-ST1023"]
+    dot_import_whitelist:
+      [
+        "github.com/mmcloughlin/avo/build",
+        "github.com/mmcloughlin/avo/operand",
+        "github.com/mmcloughlin/avo/reg",
+      ]
+    initialisms:
+      [
+        "ACL",
+        "API",
+        "ASCII",
+        "CPU",
+        "CSS",
+        "DNS",
+        "EOF",
+        "GUID",
+        "HTML",
+        "HTTP",
+        "HTTPS",
+        "ID",
+        "IP",
+        "JSON",
+        "QPS",
+        "RAM",
+        "RPC",
+        "SLA",
+        "SMTP",
+        "SQL",
+        "SSH",
+        "TCP",
+        "TLS",
+        "TTL",
+        "UDP",
+        "UI",
+        "GID",
+        "UID",
+        "UUID",
+        "URI",
+        "URL",
+        "UTF8",
+        "VM",
+        "XML",
+        "XMPP",
+        "XSRF",
+        "XSS",
+        "SIP",
+        "RTP",
+        "AMQP",
+        "DB",
+        "TS",
+      ]
+    http-status-code-whitelist: ["200", "400", "404", "500"]
+
+  gosimple:
+    go: "1.20"
+    checks: ["all"]
+
+  gofmt:
+    simplify: false
+
+linters:
+  # https://golangci-lint.run/usage/linters/
+  disable-all: true
+  enable:
+    - gosimple
+    - staticcheck
+    - stylecheck
+    - gofmt
