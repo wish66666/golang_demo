@@ -1,0 +1,91 @@
+openapi: 3.0.3
+info:
+  title: API定義例
+  description: サンプルのAPI定義
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: ローカル環境
+tags:
+  - name: auth
+  - name: article
+paths:
+  /login:
+    post:
+      tags:
+        - auth
+      summary: ログイン
+      description: ログインします
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: 成功
+        '400':
+          description: 不正な入力値
+        '500':
+          description: サーバーエラー
+  /user/articles:
+    get:
+      tags:
+        - article
+      summary: ユーザーのarticleを取得
+      description: ユーザーが所持しているarticleを全て取得します
+      operationId: findArticles
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                 $ref: '#/components/schemas/FindArticlesResponse'
+        '400':
+          description: 不正な入力値
+        '500':
+          description: サーバーエラー
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        UserID:
+          type: string
+          example: user
+        Password:
+          type: string
+          example: password
+      required:
+        - UserID
+        - Password
+    FindArticlesResponse:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+          example: 10
+        Title:
+          type: string
+          example: hogehoge
+        Content:
+          type: string
+          example: fugafuga
+        CreatedAt:
+          type: string
+          format: date-time
+        UpdatedAt:
+          type: string
+          format: date-time
+      required:
+        - ID
+        - Title
+        - Content
+        - CreatedAt
+        - UpdatedAt
